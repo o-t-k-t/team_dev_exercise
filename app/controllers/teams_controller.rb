@@ -15,7 +15,9 @@ class TeamsController < ApplicationController
     @team = Team.new
   end
 
-  def edit; end
+  def edit
+    redirect_to root_path, notice: 'リーダー以外はチーム編集できません' if @team.owner != current_user
+  end
 
   def create
     @team = Team.new(team_params)
@@ -30,6 +32,11 @@ class TeamsController < ApplicationController
   end
 
   def update
+    if @team.owner != current_user
+      redirect_to root_path, notice: 'リーダー以外はチーム編集できません'
+      return
+    end
+
     if @team.update(team_params)
       redirect_to @team, notice: 'チーム更新に成功しました！'
     else
