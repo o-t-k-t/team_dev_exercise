@@ -15,4 +15,9 @@ class Team < ApplicationRecord
   def invite_member(user)
     assigns.create(user: user)
   end
+
+  def change_leader(owner)
+    update!(owner_id: owner.id)
+    TeamMailer.ownership_mail(name, owner.email).deliver
+  end
 end
