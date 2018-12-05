@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'ownership/update'
   root 'statics#top'
   get :dashboard, to: 'teams#dashboard'
 
@@ -10,6 +11,7 @@ Rails.application.routes.draw do
   resource :user
   
   resources :teams do
+    resource :ownership, only: :update
     resources :assigns, only: %w(create destroy)
     resources :agendas, shallow: true do
       resources :articles do

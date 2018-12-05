@@ -42,6 +42,15 @@
                       <td><%= image_tag 'default.jpg', size: '40x40' %></td>
                       <td><%= assign.user.email %></td>
                       <td><%= link_to '削除', team_assign_path(@team, assign), method: :delete, class: 'btn btn-sm btn-danger' %></td>
+                      <td>
+                        <%= form_with(url: team_ownership_path(@team), method: :patch, local: true) do |f| %>
+                          <div class="actions">
+                            <%= f.hidden_field :team_id, value: @team.id %>
+                            <%= f.hidden_field :user_id, value: assign.user_id %>
+                            <%= f.submit 'リーダーにする', class: 'btn btn btn-sm btn-primary' %>
+                          </div>
+                        <% end %>
+                      </td>
                     </tr>
                   <% end %>
                 </tbody>
