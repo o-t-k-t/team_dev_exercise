@@ -3,7 +3,7 @@ module TeamHelper
     image.presence || 'default.jpg'
   end
 
-  def can_delegate_ownership?(user, team)
-    user == team.owner
+  def can_delegate_ownership?(delegater, team, delegatee)
+    delegater == team.owner && delegatee != team.owner
   end
 end
