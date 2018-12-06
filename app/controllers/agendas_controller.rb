@@ -25,7 +25,7 @@ class AgendasController < ApplicationController
 
   def destroy
     if deletable_agenda?(@agenda)
-      @agenda.destroy
+      @agenda.destroy_with_notification
       redirect_to dashboard_url, notice: 'アジェンダを削除しました！'
     else
       redirect_to dashboard_url, notice: 'アジェンダは作成者とチームリーダー以外は削除できません'
