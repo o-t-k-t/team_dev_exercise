@@ -1,5 +1,7 @@
 class AgendasController < ApplicationController
-  # before_action :set_agenda, only: %i[show edit update destroy]
+  include TeamHelper
+
+  before_action :set_agenda, only: :destroy
 
   def index
     @agendas = Agenda.all
@@ -18,6 +20,15 @@ class AgendasController < ApplicationController
       redirect_to dashboard_url, notice: 'アジェンダ作成に成功しました！'
     else
       render :new
+    end
+  end
+
+  def destroy
+    if deletable_agenda?(@agenda)
+      @agenda.destroy
+      redirect_to dashboard_url, notice: 'アジェンダを削除しました！'
+    else
+      redirect_to dashboard_url, notice: 'アジェンダは作成者とチームリーダー以外は削除できません'
     end
   end
 
