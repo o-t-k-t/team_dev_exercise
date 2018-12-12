@@ -1,6 +1,5 @@
 class AssignsController < ApplicationController
   before_action :authenticate_user!
-  include TeamHelper
 
   def create
     team = Team.friendly.find(params[:team_id])
