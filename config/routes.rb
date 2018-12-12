@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  get 'ownership/update'
   root 'statics#top'
   get :dashboard, to: 'teams#dashboard'
 
