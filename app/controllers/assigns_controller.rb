@@ -1,5 +1,6 @@
 class AssignsController < ApplicationController
   before_action :authenticate_user!
+  include TeamHelper
 
   def create
     team = Team.friendly.find(params[:team_id])
@@ -14,20 +15,21 @@ class AssignsController < ApplicationController
 
   def destroy
     assign = Assign.find(params[:id])
-    assigned_user = assign.user
 
-    if !(assign.team.owner == current_user || assigned_user == current_user)
+    unless deletable_asign?(assign)
       redirect_to team_url(params[:team_id]), notice: 'リーダー・本人以外はメンバー削除はできません。'
-    elsif assigned_user == assign.team.owner
-      redirect_to team_url(params[:team_id]), notice: 'リーダーは削除できません。'
-    elsif Assign.where(user_id: assigned_user.id).count == 1
-      redirect_to team_url(params[:team_id]), notice: 'このユーザーはこのチームにしか所属していないため、削除できません。'
-    else
-      another_team = Assign.find_by(user_id: assigned_user.id).team
-      change_keep_team(assigned_user, another_team) if assigned_user.keep_team_id == assign.team_id
-      assign.destroy
-      redirect_to team_url(params[:team_id]), notice: 'メンバーを削除しました。'
+      return
     end
+
+    unless assign.destroy
+      redirect_to team_url(params[:team_id]), notice: assign.errors.full_messages.join("\n")
+      return
+    end
+
+    user = assign.user
+    change_keep_team(user, user.teams.first) if user.keep_team_id == assign.team_id
+
+    redirect_to team_url(params[:team_id]), notice: 'メンバーを削除しました。'
   end
 
   private
